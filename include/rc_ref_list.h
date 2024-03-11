@@ -12,6 +12,7 @@ typedef struct {
 } rc_ref_list_t;
 
 rc_ref_list_t* rc_ref_list_create();
+int rc_ref_list_count(rc_ref_list_t* list);
 int rc_ref_list_insert(rc_ref_list_t* list, void* ref);
 int rc_ref_list_remove(rc_ref_list_t* list, void* target_ref);
 int rc_ref_list_destroy(rc_ref_list_t* list);

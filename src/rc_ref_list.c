@@ -22,6 +22,9 @@ rc_ref_list_t* rc_ref_list_create() {
   return ref_list;
 } 
 
+int rc_ref_list_count(rc_ref_list_t* list) {
+  return list->size;
+}
 
 int rc_ref_list_insert(rc_ref_list_t* list, void* ref) { 
   int i;

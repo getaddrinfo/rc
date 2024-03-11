@@ -30,6 +30,14 @@ rc_resource_t* rc_create(void* value, rc_resource_freer_t free_impl_fn) {
   return resource;
 }
 
+int rc_strongs(rc_resource_t* resource) {
+  return resource->count;
+}
+
+int rc_weaks(rc_resource_t* resource) {
+  return rc_ref_list_count(resource->weaks);
+} 
+
 int rc_release(rc_resource_t* resource) {
   resource->count--;
   if (resource->count != 0) return 0;

@@ -14,6 +14,8 @@ typedef struct {
 } rc_resource_t;
 
 rc_resource_t* rc_create(void* value, rc_resource_freer_t free_impl_fn);
+int rc_weaks(rc_resource_t* resource); // counts the number of weak references
+int rc_strongs(rc_resource_t* resource); // counts the number of strong references
 int rc_release(rc_resource_t* resource);
 
 #endif // _RC_RESOURCE_H
