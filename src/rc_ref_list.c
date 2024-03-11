@@ -73,6 +73,8 @@ int rc_ref_list_remove(rc_ref_list_t* list, void* target_ref) {
 int rc_ref_list_destroy(rc_ref_list_t* list) {
   free(list->items);
   free(list);
+
+  return 0;
 }
 
 
