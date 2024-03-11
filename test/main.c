@@ -143,9 +143,51 @@ void test_rc_weak_and_strong_behave_correctly() {
   }
 
   DEBUG_FINISH("rc_weak_and_strong_behave_correctly");
+  return;
 
 free_resource:
   rc_release(resource);
+  return;
+
+free_owned:
+  free(owned);
+}
+
+void test_upgrading_weak_ref_to_strong_ref_behaves_correctly() {
+  void* owned = malloc(sizeof(void*));
+
+  if (owned == NULL) {
+    DEBUG_MSG("upgrading_weak_ref_to_strong_ref_behaves_correctly", "malloc owned failed");
+    return;
+  }
+
+  rc_resource_t* resource = rc_create(owned, free_test_value);
+  if (resource == NULL) {
+    DEBUG_MSG("upgrading_weak_ref_to_strong_ref_behaves_correctly", "rc_create failed");
+    goto free_owned;
+  }
+
+  rc_weak_t* weak = rc_weak_create(resource);
+  if (weak == NULL) {
+    DEBUG_MSG("upgrading_weak_ref_to_strong_ref_behaves_correctly", "rc_weak_create failed");
+    return;
+  }
+
+  rc_strong_t* strong = rc_weak_upgrade(weak);
+  if (strong == NULL) {
+    DEBUG_MSG("upgrading_weak_ref_to_strong_ref_behaves_correctly", "rc_weak_upgrade failed");
+    return;
+  }
+  
+  if (resource->count != 1) {
+    DEBUG("upgrading_weak_ref_to_strong_ref_behaves_correctly", "rc_weak_upgrade failed, ref count @ %d (expected 1)", resource->count);
+    return;
+  }
+
+  DEBUG("upgrading_weak_ref_to_strong_ref_behaves_correctly", "resource @ %d (expected = 1)", resource->count);
+  DEBUG_FINISH("upgrading_weak_ref_to_strong_ref_behaves_correctly");
+
+  rc_strong_free(strong);
   return;
 
 free_owned:
@@ -157,6 +199,7 @@ int main() {
   test_rc_strong_creation_works();
   test_rc_weak_creation_works();
   test_rc_weak_and_strong_behave_correctly();
+  test_upgrading_weak_ref_to_strong_ref_behaves_correctly();
 
   return 0;
 }
