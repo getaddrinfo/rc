@@ -43,7 +43,10 @@ int rc_weak_free(rc_weak_t* ref) {
 }
 
 void* rc_weak_get(rc_weak_t* ref) {
-  if (rc_weak_valid(ref) == 0) return NULL;
+  if (rc_weak_valid(ref) == 0) {
+    return NULL;
+  }
+  
   return ref->resource;
 }
 
