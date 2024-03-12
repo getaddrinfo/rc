@@ -5,6 +5,7 @@
 
 typedef struct {
   rc_resource_t* resource;
+  int valid;
 } rc_strong_t;
 
 typedef struct {

@@ -4,11 +4,12 @@
 #include "rc_resource.h"
 #include "rc_ref.h"
 
-rc_strong_t* rc_strong_create(rc_resource_t* resource); // creates a strong ref
-rc_strong_t* rc_strong_clone(rc_strong_t* ref); // clones a strong reference, creating a new strong reference to it
-rc_weak_t* rc_strong_weak_clone(rc_strong_t* ref); // creates a weak reference from a strong reference
+rc_strong_t rc_strong_create(rc_resource_t* resource); // creates a strong ref
+rc_strong_t rc_strong_clone(rc_strong_t ref); // clones a strong reference, creating a new strong reference to it
+rc_weak_t* rc_strong_weak_clone(rc_strong_t ref); // creates a weak reference from a strong reference
 
-void* rc_strong_get(rc_strong_t* strongref); // gets the value owned by the resource
+void* rc_strong_get(rc_strong_t strongref); // gets the value owned by the resource
 int rc_strong_free(rc_strong_t* strongref); // frees the strong ref
+int rc_strong_valid(rc_strong_t strongref); // returns 1 if the ref is valid
 
 #endif // _RC_STRONG_H

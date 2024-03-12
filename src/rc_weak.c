@@ -25,9 +25,10 @@ rc_weak_t* rc_weak_create(rc_resource_t* resource) {
   return ref;
 }
 
-rc_strong_t* rc_weak_upgrade(rc_weak_t* ref) {
+rc_strong_t rc_weak_upgrade(rc_weak_t* ref) {
   if (rc_weak_valid(ref) == 0) {
-    return NULL;
+    rc_strong_t invalid = { .resource = NULL, .valid = 0 };
+    return invalid;
   }
 
   return rc_strong_create(ref->resource);
@@ -47,7 +48,7 @@ void* rc_weak_get(rc_weak_t* ref) {
     return NULL;
   }
   
-  return ref->resource;
+  return ref->resource->owned;
 }
 
 inline int rc_weak_valid(rc_weak_t* ref) {

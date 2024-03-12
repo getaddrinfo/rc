@@ -51,12 +51,7 @@ void test_rc_strong_creation_works() {
     goto free_owned;
   }
 
-  rc_strong_t* strong = rc_strong_create(resource);
-  if (strong == NULL) {
-    DEBUG_MSG("rc_strong_creation_works", "rc_strong_create failed");
-    goto free_resource;
-  }
-
+  rc_strong_t strong = rc_strong_create(resource);
   DEBUG_FINISH("rc_strong_creation_works");
 
 free_resource:
@@ -111,7 +106,7 @@ void test_rc_weak_and_strong_behave_correctly() {
     goto free_owned;
   }
 
-  rc_strong_t* strong[2] = {
+  rc_strong_t strong[2] = {
     rc_strong_create(resource),
     rc_strong_create(resource)
   };
@@ -129,14 +124,14 @@ void test_rc_weak_and_strong_behave_correctly() {
     DEBUG("rc_weak_and_strong_behave_correctly", "weak(%d) @ 2 strong (expected = valid): %s", i, rc_weak_valid(weak[i]) == 1 ? "valid" : "invalid");
   }
 
-  rc_strong_free(strong[0]);
+  rc_strong_free(&strong[0]);
   DEBUG("rc_weak_and_strong_behave_correctly", "references = %d", resource->count);
 
   for(int i = 0; i < ARRAY_SIZE(weak); i++) {
     DEBUG("rc_weak_and_strong_behave_correctly", "weak(%d) @ 1 strong (expected = valid): %s", i, rc_weak_valid(weak[i]) == 1 ? "valid" : "invalid");
   }
 
-  rc_strong_free(strong[1]);
+  rc_strong_free(&strong[1]);
 
   for(int i = 0; i < ARRAY_SIZE(weak); i++) {
     DEBUG("rc_weak_and_strong_behave_correctly", "weak(%d) @ 0 strong (expected = invalid): %s", i, rc_weak_valid(weak[i]) == 1 ? "valid" : "invalid");
@@ -173,13 +168,9 @@ void test_upgrading_weak_ref_to_strong_ref_behaves_correctly() {
     return;
   }
 
-  rc_strong_t* strong = rc_weak_upgrade(weak);
-  if (strong == NULL) {
-    DEBUG_MSG("upgrading_weak_ref_to_strong_ref_behaves_correctly", "rc_weak_upgrade failed");
-    return;
-  }
+  rc_strong_t strong = rc_weak_upgrade(weak);
   
-  if (resource->count != 1) {
+  if (resource->count != 1 || !rc_strong_valid(strong)) {
     DEBUG("upgrading_weak_ref_to_strong_ref_behaves_correctly", "rc_weak_upgrade failed, ref count @ %d (expected 1)", resource->count);
     return;
   }
@@ -187,7 +178,7 @@ void test_upgrading_weak_ref_to_strong_ref_behaves_correctly() {
   DEBUG("upgrading_weak_ref_to_strong_ref_behaves_correctly", "resource @ %d (expected = 1)", resource->count);
   DEBUG_FINISH("upgrading_weak_ref_to_strong_ref_behaves_correctly");
 
-  rc_strong_free(strong);
+  rc_strong_free(&strong);
   return;
 
 free_owned:
