@@ -27,7 +27,7 @@ rc_weak_t* rc_weak_create(rc_resource_t* resource) {
 
 rc_strong_t rc_weak_upgrade(rc_weak_t* ref) {
   if (rc_weak_valid(ref) == 0) {
-    rc_strong_t invalid = { .resource = NULL, .valid = 0 };
+    rc_strong_t invalid = { .resource = NULL };
     return invalid;
   }
 

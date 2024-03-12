@@ -8,7 +8,7 @@
 rc_strong_t rc_strong_create(rc_resource_t* resource) { 
   resource->count++;
 
-  rc_strong_t strong = { .resource = resource, .valid = 1 };
+  rc_strong_t strong = { .resource = resource };
   return strong;
 }
 
@@ -26,11 +26,11 @@ void* rc_strong_get(rc_strong_t strongref) {
 
 int rc_strong_free(rc_strong_t* strongref) {
   rc_release(strongref->resource);
-  strongref->valid = 0;
+  strongref->resource = NULL;
   
   return 0;
 }
 
 int rc_strong_valid(rc_strong_t strongref) {
-  return strongref.valid;
+  return strongref.resource != NULL;
 }
